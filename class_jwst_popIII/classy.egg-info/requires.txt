@@ -1,0 +1,7 @@
+anesthetic>=2.14.4
+arviz>=1.0.0
+cobaya>=3.6.2
+corner>=2.2.3
+iminuit>=2.32.0
+mpi4py>=4.1.1
+ptmcmcsampler>=2.1.4
