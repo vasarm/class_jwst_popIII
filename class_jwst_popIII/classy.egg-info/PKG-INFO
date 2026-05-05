@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: classy
+Version: 3.3.4.0
+Summary: Python interface to the Cosmological Boltzmann code CLASS
+Home-page: http://www.class-code.net
+Author: Julien Lesgourgues, Thomas Tram, Nils Schöneberg, ... and many more (see webpage)
+Project-URL: Homepage, http://www.class-code.net
+Requires-Python: >=3.12
+Requires-Dist: anesthetic>=2.14.4
+Requires-Dist: arviz>=1.0.0
+Requires-Dist: cobaya>=3.6.2
+Requires-Dist: corner>=2.2.3
+Requires-Dist: iminuit>=2.32.0
+Requires-Dist: mpi4py>=4.1.1
+Requires-Dist: ptmcmcsampler>=2.1.4
+Dynamic: home-page
