@@ -121,7 +121,7 @@ info = {
     # + JWST Lya neutral fraction data
     "likelihood": {
         "planck_2018_highl_plik.TTTEEE": None,
-        "planck_2018_lensing.native":    None,
+        "planck_2018_lensing.clik":    None,
         "Lya": {
             "external":  LyaLikelihood,
             "data_file": "cobaya/likelihood/Lya_data.json",
@@ -139,10 +139,15 @@ info = {
     # ---- Sampler -----------------------------------------------------------
     "sampler": {
         "mcmc": {
-            "covmat":         "auto",
-            "burn_in":        0,
-            "Rminus1_stop":   0.01,
-            "learn_proposal": True,
+            "covmat":                             "auto",
+            "burn_in":                            0,
+            "Rminus1_stop":                       0.01,
+            "learn_proposal":                     True,
+            "learn_every":                        "20d",
+            "measure_speeds":                     True,
+            "drag":                               True,
+            "oversample_power":                   0.4,
+            "learn_proposal_Rminus1_max_early":   100,
         },
     },
 
