@@ -120,7 +120,7 @@ info = {
         "planck_2018_highl_plik.TTTEEE": None,
         "planck_2018_lowl.TT":           None,
         "planck_2018_lowl.EE":           None,
-        "planck_2018_lensing.native":    None,
+        "planck_2018_lensing.clik":    None,
     },
 
     # ---- External prior on logMvcut ----------------------------------------
@@ -134,10 +134,15 @@ info = {
     # ---- Sampler -----------------------------------------------------------
     "sampler": {
         "mcmc": {
-            "covmat":         "auto",
-            "burn_in":        0,
-            "Rminus1_stop":   0.01,
-            "learn_proposal": True,
+            "covmat":                             "auto",
+            "burn_in":                            0,
+            "Rminus1_stop":                       0.01,
+            "learn_proposal":                     True,
+            "learn_every":                        "20d",
+            "measure_speeds":                     True,
+            "drag":                               True,
+            "oversample_power":                   0.4,
+            "learn_proposal_Rminus1_max_early":   100,
         },
     },
 
