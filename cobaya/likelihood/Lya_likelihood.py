@@ -33,6 +33,7 @@ class LyaLikelihood(Likelihood):
                 kind='linear', bounds_error=False, fill_value="extrapolate", assume_sorted=True
             )
             safe_f = self._safe_integrand(self.data[key]["f"])
+            self.data[key]["safe_f"] = safe_f
             norm = 0.0
             for a, b in zip(np.linspace(0.0, 1.0, 9)[:-1], np.linspace(0.0, 1.0, 9)[1:]):
                 seg, _ = quad(safe_f, a, b, limit=100, epsabs=1e-5, epsrel=1e-4)
@@ -77,21 +78,23 @@ class LyaLikelihood(Likelihood):
 
         for name, d in self.data.items():
             z0, d1, d2 = d["z"], d["d1"], d["d2"]
-            f, norm = d["f"], d["norm"]
+            safe_f, norm = d["safe_f"], d["norm"]
 
             if d1 == 0.0 and d2 == 0.0:
-                # point: single evaluation
+                # point: single evaluation of the model at z0
                 x_HI_val = float(np.interp(z0, z_sorted, xHI_sorted))
-                p = float(f(x_HI_val)) / norm
             else:
-                # z-range: vectorized fixed-order Gauss-Legendre quadrature
-                x_HI_val = float(np.interp(z0, z_sorted, xHI_sorted))
-                def integrand(z_pts):
-                    xhi = np.interp(z_pts, z_sorted, xHI_sorted)
-                    vals = np.asarray(f(xhi), dtype=float)
-                    return np.where(np.isfinite(vals) & (vals > 0.0), vals, 0.0)
-                val, _ = fixed_quad(integrand, z0 - d1, z0 + d2, n=20)
-                p = val / norm
+                # z-range: average the model's x_HI(theta, z) over [z0-d1, z0+d2]
+                # first, then evaluate the dataset's posterior once at that single
+                # averaged value -- i.e. p_i(<x_HI(theta,z)>_i), matching
+                # arXiv:2604.24835 eq. 19 ("the average is computed over the
+                # redshift range of the posterior").
+                def xhi_of_z(z_pts):
+                    return np.interp(z_pts, z_sorted, xHI_sorted)
+                integral, _ = fixed_quad(xhi_of_z, z0 - d1, z0 + d2, n=20)
+                x_HI_val = integral / (d1 + d2)
+
+            p = float(safe_f(x_HI_val)) / norm
 
             lp = np.log(max(p, self._FLOOR))
             loglike += lp
