@@ -6,11 +6,12 @@ import sys, os
 
 # ---------------------------------------------------------------------------
 info = {
+    # "debug": True, # NB! REMOVE IT OR COMMENT OUT FOR ACTUAL RUN
     "params": {
         # --- Reionisation (sampled) ------------------------------------------
         "reio_jwst_popIII_logMvcut": {
             "prior": {"min": 4.0, "max": 8.0},
-            "ref":   {"dist": "norm", "loc": 7.0, "scale": 0.5},
+            "ref":   {"dist": "norm", "loc": 6.0, "scale": 0.5},
             "proposal": 0.3,
             "latex": r"\log M_\mathrm{vcut}",
         },
@@ -117,10 +118,12 @@ info = {
     # ---- Theory ------------------------------------------------------------
     "theory": {
         "classy": {
+            "path": "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII",
             "extra_args": {
                 "YHe":                  "BBN",
                 "recombination":        "HyRec",
-                "Phi_UV_file":          "/home/marvas/cobaya/DESI_tau/class/external/jwst_reio/Phi_UV.dat",
+                "base_path":            "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII",
+                "Phi_UV_file":          "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII/external/jwst_reio/Phi_UV.dat",
                 "reio_parametrization": "reio_jwst_popIII",
                 "N_ncdm":               1,
                 "N_ur":                 2.0328,
@@ -129,12 +132,13 @@ info = {
     },
 
     # ---- Likelihood --------------------------------------------------------
-    # Full Planck 2018: high-l + low-l TT + low-l EE + lensing
+    # Planck 2018 no low-ell: plik + lensing only
+    # + DESI DR2 BAO + DES-Dovekie SN Ia
     "likelihood": {
         "planck_2018_highl_plik.TTTEEE": None,
-        "planck_2018_lowl.TT":           None,
-        "planck_2018_lowl.EE":           None,
         "planck_2018_lensing.clik":    None,
+        "bao.desi_dr2":                  None,
+        "sn.desdovekie":                 None,
     },
 
     # ---- External prior on logMvcut ----------------------------------------
@@ -161,7 +165,7 @@ info = {
     },
 
     # ---- Output ------------------------------------------------------------
-    "output": "cobaya_runs/output/cpl_planck/cpl_planck",
+    "output": "cobaya/output/cpl_planck_desi_des/cpl_planck_desi_des",
     "resume": True,
 }
 

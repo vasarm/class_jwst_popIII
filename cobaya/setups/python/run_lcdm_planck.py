@@ -6,12 +6,11 @@ import sys, os
 
 # ---------------------------------------------------------------------------
 info = {
-    # "debug": True, # NB! REMOVE IT OR COMMENT OUT FOR ACTUAL RUN
     "params": {
         # --- Reionisation (sampled) ------------------------------------------
         "reio_jwst_popIII_logMvcut": {
             "prior": {"min": 4.0, "max": 8.0},
-            "ref":   {"dist": "norm", "loc": 6.0, "scale": 0.5},
+            "ref":   {"dist": "norm", "loc": 7.0, "scale": 0.5},
             "proposal": 0.3,
             "latex": r"\log M_\mathrm{vcut}",
         },
@@ -44,20 +43,6 @@ info = {
             "ref":   {"dist": "norm", "loc": 35, "scale": 5},
             "proposal": 1.0,
             "latex": r"z_\mathrm{pop}",
-        },
-
-        # --- CPL dark energy (sampled) --------------------------------------
-        "w0_fld": {
-            "prior": {"min": -3.0, "max": 1.0},
-            "ref":   {"dist": "norm", "loc": -0.99, "scale": 0.02},
-            "proposal": 0.02,
-            "latex": r"w_{0,\mathrm{DE}}",
-        },
-        "wa_fld": {
-            "prior": {"min": -3.0, "max": 2.0},
-            "ref":   {"dist": "norm", "loc": 0.0, "scale": 0.05},
-            "proposal": 0.05,
-            "latex": r"w_{a,\mathrm{DE}}",
         },
 
         # --- Cosmological (sampled) -----------------------------------------
@@ -102,7 +87,6 @@ info = {
         "k_pivot": 0.05,
         "T_cmb":   2.7255,
         "Omega_k": 0.0,
-        "Omega_Lambda": 0, # Turn on dynamical DE
 
         # --- Derived --------------------------------------------------------
         "jwst_popIII_tau": {"latex": r"\tau_\mathrm{popIII}"},
@@ -118,10 +102,12 @@ info = {
     # ---- Theory ------------------------------------------------------------
     "theory": {
         "classy": {
+            "path": "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII",
             "extra_args": {
                 "YHe":                  "BBN",
                 "recombination":        "HyRec",
-                "Phi_UV_file":          "/home/marvas/cobaya/DESI_tau/class/external/jwst_reio/Phi_UV.dat",
+                "base_path":            "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII",
+                "Phi_UV_file":          "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII/external/jwst_reio/Phi_UV.dat",
                 "reio_parametrization": "reio_jwst_popIII",
                 "N_ncdm":               1,
                 "N_ur":                 2.0328,
@@ -130,13 +116,12 @@ info = {
     },
 
     # ---- Likelihood --------------------------------------------------------
-    # Planck 2018 no low-ell: plik + lensing only
-    # + DESI DR2 BAO + DES-Dovekie SN Ia
+    # Full Planck 2018: high-l + low-l TT + low-l EE + lensing
     "likelihood": {
         "planck_2018_highl_plik.TTTEEE": None,
+        "planck_2018_lowl.TT":           None,
+        "planck_2018_lowl.EE":           None,
         "planck_2018_lensing.clik":    None,
-        "bao.desi_dr2":                  None,
-        "sn.desdovekie":                 None,
     },
 
     # ---- External prior on logMvcut ----------------------------------------
@@ -154,7 +139,7 @@ info = {
             "burn_in":                            0,
             "Rminus1_stop":                       0.01,
             "learn_proposal":                     True,
-            "learn_every":                        400,
+            "learn_every":                        "20d",
             "measure_speeds":                     True,
             "drag":                               True,
             "oversample_power":                   0.4,
@@ -163,7 +148,7 @@ info = {
     },
 
     # ---- Output ------------------------------------------------------------
-    "output": "cobaya_runs/output/cpl_planck_desi_des/cpl_planck_desi_des",
+    "output": "cobaya/output/lcdm_planck/lcdm_planck",
     "resume": True,
 }
 

@@ -2,9 +2,7 @@ import numpy as np
 from cobaya.run import run
 
 import sys, os
-sys.path.insert(0, os.path.dirname(__file__))
-
-from likelihood.Lya_likelihood import LyaLikelihood
+# sys.path.insert(0, os.path.dirname(__file__))
 
 # ---------------------------------------------------------------------------
 info = {
@@ -46,7 +44,7 @@ info = {
             "proposal": 1.0,
             "latex": r"z_\mathrm{pop}",
         },
-        
+
         # --- CPL dark energy (sampled) --------------------------------------
         "w0_fld": {
             "prior": {"min": -3.0, "max": 1.0},
@@ -119,10 +117,12 @@ info = {
     # ---- Theory ------------------------------------------------------------
     "theory": {
         "classy": {
+            "path": "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII",
             "extra_args": {
                 "YHe":                  "BBN",
                 "recombination":        "HyRec",
-                "Phi_UV_file":          "/home/marvas/cobaya/DESI_tau/class/external/jwst_reio/Phi_UV.dat",
+                "base_path":            "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII",
+                "Phi_UV_file":          "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII/external/jwst_reio/Phi_UV.dat",
                 "reio_parametrization": "reio_jwst_popIII",
                 "N_ncdm":               1,
                 "N_ur":                 2.0328,
@@ -131,15 +131,12 @@ info = {
     },
 
     # ---- Likelihood --------------------------------------------------------
-    # Planck 2018 no low-ell: plik (high-l) + lensing
-    # + JWST Lya neutral fraction data
+    # Full Planck 2018: high-l + low-l TT + low-l EE + lensing
     "likelihood": {
         "planck_2018_highl_plik.TTTEEE": None,
+        "planck_2018_lowl.TT":           None,
+        "planck_2018_lowl.EE":           None,
         "planck_2018_lensing.clik":    None,
-        "Lya": {
-            "external":  LyaLikelihood,
-            "data_file": "cobaya_runs/runs/likelihood/Lya_data.json",
-        },
     },
 
     # ---- External prior on logMvcut ----------------------------------------
@@ -166,7 +163,7 @@ info = {
     },
 
     # ---- Output ------------------------------------------------------------
-    "output": "cobaya_runs/output/cpl_planck_jwst/cpl_planck_jwst",
+    "output": "cobaya/output/cpl_planck/cpl_planck",
     "resume": True,
 }
 

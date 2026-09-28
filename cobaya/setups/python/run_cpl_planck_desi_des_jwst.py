@@ -2,7 +2,7 @@ import numpy as np
 from cobaya.run import run
 
 import sys, os
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 
 from likelihood.Lya_likelihood import LyaLikelihood
 
@@ -119,10 +119,12 @@ info = {
     # ---- Theory ------------------------------------------------------------
     "theory": {
         "classy": {
+            "path": "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII",
             "extra_args": {
                 "YHe":                  "BBN",
                 "recombination":        "HyRec",
-                "Phi_UV_file":          "/home/marvas/cobaya/DESI_tau/class/external/jwst_reio/Phi_UV.dat",
+                "base_path":            "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII",
+                "Phi_UV_file":          "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII/external/jwst_reio/Phi_UV.dat",
                 "reio_parametrization": "reio_jwst_popIII",
                 "N_ncdm":               1,
                 "N_ur":                 2.0328,
@@ -140,7 +142,7 @@ info = {
         "sn.desdovekie":                 None,
         "Lya": {
             "external":  LyaLikelihood,
-            "data_file": "cobaya_runs/runs/likelihood/Lya_data.json",
+            "data_file": "cobaya/likelihood/Lya_data.json",
         },
     },
 
@@ -168,7 +170,7 @@ info = {
     },
 
     # ---- Output ------------------------------------------------------------
-    "output": "cobaya_runs/output/cpl_planck_desi_des_jwst/cpl_planck_desi_des_jwst",
+    "output": "cobaya/output/cpl_planck_desi_des_jwst/cpl_planck_desi_des_jwst",
     "resume": True,
 }
 

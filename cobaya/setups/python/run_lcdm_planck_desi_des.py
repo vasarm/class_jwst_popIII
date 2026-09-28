@@ -2,9 +2,7 @@ import numpy as np
 from cobaya.run import run
 
 import sys, os
-sys.path.insert(0, os.path.dirname(__file__))
-
-from likelihood.Lya_likelihood import LyaLikelihood
+# sys.path.insert(0, os.path.dirname(__file__))
 
 # ---------------------------------------------------------------------------
 info = {
@@ -104,11 +102,12 @@ info = {
     # ---- Theory ------------------------------------------------------------
     "theory": {
         "classy": {
-            "path": "/mnt/Data/projects/class_reio",
+            "path": "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII",
             "extra_args": {
                 "YHe":                  "BBN",
                 "recombination":        "HyRec",
-                "Phi_UV_file":          "external/jwst_reio/Phi_UV.dat",
+                "base_path":            "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII",
+                "Phi_UV_file":          "/mnt/Data/projects/class_jwst_popIII/class_jwst_popIII/external/jwst_reio/Phi_UV.dat",
                 "reio_parametrization": "reio_jwst_popIII",
                 "N_ncdm":               1,
                 "N_ur":                 2.0328,
@@ -117,15 +116,13 @@ info = {
     },
 
     # ---- Likelihood --------------------------------------------------------
-    # Planck 2018 no low-ell: plik (high-l) + lensing
-    # + JWST Lya neutral fraction data
+    # Planck 2018 no low-ell: plik + lensing only
+    # + DESI DR2 BAO + DES-Dovekie SN Ia
     "likelihood": {
         "planck_2018_highl_plik.TTTEEE": None,
         "planck_2018_lensing.clik":    None,
-        "Lya": {
-            "external":  LyaLikelihood,
-            "data_file": "cobaya/likelihood/Lya_data.json",
-        },
+        "bao.desi_dr2":                  None,
+        "sn.desdovekie":                 None,
     },
 
     # ---- External prior on logMvcut ----------------------------------------
@@ -152,7 +149,7 @@ info = {
     },
 
     # ---- Output ------------------------------------------------------------
-    "output": "cobaya/output/lcdm_planck_jwst/lcdm_planck_jwst",
+    "output": "cobaya/output/lcdm_planck_desi_des/lcdm_planck_desi_des",
     "resume": True,
 }
 
