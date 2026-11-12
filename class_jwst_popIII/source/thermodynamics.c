@@ -461,6 +461,8 @@ int thermodynamics_free(
     free(pth->reio_jwst_x_table);
     free(pth->reio_jwst_ddx_table);
     free(pth->reio_jwst_popIII_Phi_table);
+    free(pth->reio_jwst_popIII_gl_mu);
+    free(pth->reio_jwst_popIII_gl_w8);
   }
 
   class_call(thermodynamics_free_input(pth),
@@ -1542,6 +1544,16 @@ int thermodynamics_set_parameters_reionization(
 
     /* load UV-luminosity function table from file */
     class_call(thermodynamics_jwst_popIII_create_Phi_UV_table(pth, pth->error_message),
+               pth->error_message, pth->error_message);
+
+    /* Gauss-Legendre nodes/weights for the M_UV integral: depend only on n_gl, compute once */
+    pth->reio_jwst_popIII_n_gl = 100;
+    class_alloc(pth->reio_jwst_popIII_gl_mu, pth->reio_jwst_popIII_n_gl*sizeof(double), pth->error_message);
+    class_alloc(pth->reio_jwst_popIII_gl_w8, pth->reio_jwst_popIII_n_gl*sizeof(double), pth->error_message);
+    class_call(quadrature_gauss_legendre(pth->reio_jwst_popIII_gl_mu,
+                                         pth->reio_jwst_popIII_gl_w8,
+                                         pth->reio_jwst_popIII_n_gl,
+                                         1.e-10, pth->error_message),
                pth->error_message, pth->error_message);
 
     /* solve ODE for x_HII(z) and store spline table */
@@ -4993,14 +5005,10 @@ int thermodynamics_jwst_popIII_ndot_ion_over_n_H(
   double n_H0_Mpc3 = pth->n_e * pow(_Mpc_over_m_, 3.);
 
   /** - Gauss-Legendre quadrature over M_UV in [Mmin, Mmax] */
-  int n_gl = 100;
-  double *mu, *w8;
-  class_alloc(mu, n_gl * sizeof(double), error_message);
-  if ((w8 = malloc(n_gl * sizeof(double))) == NULL) {
-    free(mu);
-    class_stop(error_message, "Cannot allocate w8 array (%d doubles)", n_gl);
-  }
-  quadrature_gauss_legendre(mu, w8, n_gl, 1.e-10, error_message);
+  /* nodes/weights precomputed once in thermodynamics_set_parameters_reionization */
+  int     n_gl = pth->reio_jwst_popIII_n_gl;
+  double *mu   = pth->reio_jwst_popIII_gl_mu;
+  double *w8   = pth->reio_jwst_popIII_gl_w8;
 
   double half_range = 0.5 * (Mmax - Mmin);
   double mid        = 0.5 * (Mmax + Mmin);
@@ -5031,9 +5039,6 @@ int thermodynamics_jwst_popIII_ndot_ion_over_n_H(
 
     integral += half_range * w8[i] * integrand;
   }
-
-  free(mu);
-  free(w8);
 
   if (status == _FAILURE_) return _FAILURE_;
 

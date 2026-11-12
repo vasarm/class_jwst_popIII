@@ -143,6 +143,9 @@ struct thermodynamics
   int reio_jwst_popIII_Phi_UV_n2;
   double * reio_jwst_popIII_Phi_table;
   struct trilinear_grid reio_jwst_popIII_Phi_grid;
+  int     reio_jwst_popIII_n_gl;   /**< number of Gauss-Legendre nodes for the M_UV integral */
+  double *reio_jwst_popIII_gl_mu;  /**< Gauss-Legendre nodes on [-1,1] */
+  double *reio_jwst_popIII_gl_w8;  /**< Gauss-Legendre weights */
   
   /** parameters for energy injection */
 
